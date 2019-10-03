@@ -1,15 +1,16 @@
-client_id = "" ## insert your client_id
-client_secret = "" ##insert your client_secret
-redirect_uri = "" # insert your redirect uri
+redirect_url = "" 
+client_id = "" 
+client_secret = "" 
 
-acc_name = input('Enter your Spotify account name: ')
+#Prompting the playlist generator
+acc_name = input('Spotify account name: ')
 playlist_name = input('Playlist Name: ')
 artist_name = input('Artist: ')
 print('Creating Playlist...', playlist_name,)
 
-artist = collections.namedtuple('artist', 'id name depth')
-token = util.prompt_for_user_token(acc_name,"playlist-modify-public",
 client_id = client_id,client_secret=client_secret,redirect_uri=redirect_uri)
+token = util.prompt_for_user_token(acc_name,"playlist-modify-public",
+artist = collections.namedtuple('artist', 'id name depth')
 
 if token:
     spotify = spotipy.Spotify(auth=token)
@@ -20,11 +21,12 @@ if token:
     # DFS to obtain related artists
     artists = get_artists_for_playlist(tmp_artist_id, artist_name, 2, 5)
     track_ids = []
+                                   
+                                 
     for artist in artists:
         results = spotify.artist_top_tracks(artist) ##ID
         random.shuffle(results)
-
-
+                                   
         ## shuffle the artists songs, pick one
         for track in results['tracks'][:3]:
             tmp_track = "spotify:track:" + track['id']
@@ -37,4 +39,4 @@ if token:
 
     ## add the tracks to playlist
     spotify.user_playlist_add_tracks(acc_name, playlists['id'], track_ids)
-    print("Success")
+
